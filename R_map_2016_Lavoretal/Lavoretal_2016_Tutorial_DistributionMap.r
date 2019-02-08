@@ -5,7 +5,7 @@
 
 # ---------------------------------------------------------------
 ## ALL Data needed for plotting this map is available at: 
-# <https://github.com/ricoperdiz/Tutorials/R_map_2016_Lavoretal/>
+# <https://github.com/ricoperdiz/Tutorials/tree/master/R_map_2016_Lavoretal>
 ## Script author: Ricardo Perdiz <ricardoperdiz@yahoo.com>
 ## Any doubts or error, please leave an issue at <github.com/ricoperdiz/Tutorials/> or write an email.
 # ---------------------------------------------------------------

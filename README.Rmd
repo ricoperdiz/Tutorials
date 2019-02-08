@@ -3,9 +3,14 @@ title: "Tutorials"
 output: github_document
 ---
 
-*** 
 
 Tutoriais, maioria em R, alguns Python. Por enquanto, maioria deles dizem respeito à geração de mapas de distribuição de algumas poucas espécies de plantas, oriundas de minha [carreira profissional em Botânica](https://github.com/ricoperdiz/CV).
+
+Tutoriais disponíveis:
+
+* Plotar mapa de [**A new species of _Macrolobium_ (Fabaceae, Detarioideae) endemic on a Tepui of the Guyana Shield in Brazil** (Farronay et al. 2018)](A new species of Macrolobium (Fabaceae, Detarioideae) endemic on a Tepui of the Guyana Shield in Brazil)
+
+* Plotar mapa de [**Rediscovery of _Pilosocereus oligolepsis_ (Cactaceae) in the State of Roraima, Brazil** (Lavor et al. 2016)](https://www.researchgate.net/publication/304000968_Rediscovery_of_Pilosocereus_oligolepsis_Cactaceae_in_the_State_of_Roraima_Brazil)
 
 ***
 
