@@ -68,6 +68,9 @@ cex_tam
 # Vector for colors in legend
 cores_leg <- c(rep('black',5),'grey80')
 
+## Plot all three plots separately
+## Then, we use function `layout` to combine them and save them in a pdf
+
 # plot number 1 - Overview map
 par(mar = c(0,2,2,2))
 plot(area_mapa, xlim = x1, ylim = y1, col = 'white')
@@ -128,7 +131,15 @@ legend(x = 'center', ncol = 1, legend = c(expression(paste('New sites for ', ita
        y.intersp = 1.8, 
        box.col = 'black')
 
-##layout-----------------------------------------------------------------------------
+# ------------------------------------------------------------
+######################### ATTENTION #########################
+# ------------------------------------------------------------
+
+## If you want a pdf with the final plot, run all commands at once from here
+
+
+
+## Use function `layout` to combine all plots and save the final plot in a pdf inside your working directory.
 par.norm <- par(no.readonly=T)
 graphics.off()
 
