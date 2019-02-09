@@ -68,9 +68,9 @@ area_mapa <- rgdal::readOGR(dsn = "SAm_CAm_shape.shp")
 rr <- rgdal::readOGR(dsn = "roraima.shp")
 
 # shape de rios em RR
-rios_main <- rgdal::readOGR(getwd(), "rios", encoding = "latin1")
+rios_main <- rgdal::readOGR('.', "rios", encoding = "latin1")
 
-rios_sec <- rgdal::readOGR(getwd(), "rios2", encoding = "latin1")
+rios_sec <- rgdal::readOGR('.', "rios2", encoding = "latin1")
 ```
 
 ## 03 Cria variáveis para os plots
@@ -114,13 +114,11 @@ par(mar = c(0, 2, 2, 2))
 plot(area_mapa, xlim = x1, ylim = y1, lwd = 0.2)
 plot(rr, add = TRUE, col = "gray90")
 # plota um retangulo na area do mapa da direita
-rect(
-  xleft = min(x_geral), ybottom = min(y_geral), xright =
-    max(x_geral), ytop = max(y_geral), density = 25
-)
+rect(xleft = min(x_geral), ybottom = min(y_geral), xright = max(x_geral), ytop = max(y_geral), density = 25)
+
 # coloca escala do mapa
 par(cex = 1, las = 1)
-# library(GISTools)
+
 # inclui o NORTE
 GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex.lab = 0.9, lab = "N", col = "black")
 # coloca um texto para avisar quem é Brasil e Guiana
@@ -298,11 +296,11 @@ Vejam este [link](https://www.youtube.com/watch?v=M7o1avCPSjs) para ter acesso a
 * [Multipanel plotting in R
 (with base graphics)](http://seananderson.ca/courses/11-multipanel/multipanel.pdf).
 
-##### _Para conferir o trabalho onde esse mapa foi publicado siga o link abaixo_:
+##### Para conferir o trabalho onde esse mapa foi publicado siga o link abaixo:
 
 * [Rodrigues et al. 2017. Novas ocorrências de angiospermas para o estado de Roraima, Brasil. Rodriguésia](http://rodriguesia.jbrj.gov.br/FASCICULOS/rodrig68-2/29-0140-2016.pdf) - Link no [_ResearchGate_](https://www.researchgate.net/publication/317671892_Novas_ocorrencias_de_angiospermas_para_o_estado_de_Roraima_Brasil).
 
-#### _Para ver outros mapas produzidos da mesma maneira_:
+#### Para ver outros mapas produzidos da mesma maneira:
 
 * [Lavor et al. 2016. Rediscovery of Pilosocereus oligolepsis (Cactaceae) in the State of Roraima, Brazil. Cactus and Succulent Journal 88(3):137-143](http://www.bioone.org/doi/abs/10.2985/015.088.0306?journalCode=casu) - Link no [ResearchGate](https://www.researchgate.net/publication/304000968_Rediscovery_of_Pilosocereus_oligolepsis_Cactaceae_in_the_State_of_Roraima_Brazil);
 

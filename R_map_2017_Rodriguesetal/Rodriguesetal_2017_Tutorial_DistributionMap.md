@@ -148,7 +148,7 @@ rr <- rgdal::readOGR(dsn = "roraima.shp")
 
 ``` r
 # shape de rios em RR
-rios_main <- rgdal::readOGR(getwd(), "rios", encoding = "latin1")
+rios_main <- rgdal::readOGR('.', "rios", encoding = "latin1")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
@@ -158,7 +158,7 @@ rios_main <- rgdal::readOGR(getwd(), "rios", encoding = "latin1")
     ## Integer64 fields read as strings:  FNODE_ TNODE_ LPOLY_ RPOLY_ RIV3M_W_ RIV3M_W_ID
 
 ``` r
-rios_sec <- rgdal::readOGR(getwd(), "rios2", encoding = "latin1")
+rios_sec <- rgdal::readOGR('.', "rios2", encoding = "latin1")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
@@ -167,10 +167,10 @@ rios_sec <- rgdal::readOGR(getwd(), "rios2", encoding = "latin1")
     ## It has 1 fields
     ## Integer64 fields read as strings:  FID
 
-    ## Warning in rgdal::readOGR(getwd(), "rios2", encoding = "latin1"): Dropping
-    ## null geometries: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-    ## 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
-    ## 37, 38, 39, 40, 41, 42, 43, 44
+    ## Warning in rgdal::readOGR(".", "rios2", encoding = "latin1"): Dropping null
+    ## geometries: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+    ## 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+    ## 38, 39, 40, 41, 42, 43, 44
 
 ## 03 Cria variáveis para os plots
 
@@ -223,21 +223,13 @@ par(mar = c(0, 2, 2, 2))
 plot(area_mapa, xlim = x1, ylim = y1, lwd = 0.2)
 plot(rr, add = TRUE, col = "gray90")
 # plota um retangulo na area do mapa da direita
-rect(
-  xleft = min(x_geral), ybottom = min(y_geral), xright =
-    max(x_geral), ytop = max(y_geral), density = 25
-)
+rect(xleft = min(x_geral), ybottom = min(y_geral), xright = max(x_geral), ytop = max(y_geral), density = 25)
+
 # coloca escala do mapa
 par(cex = 1, las = 1)
-# library(GISTools)
+
 # inclui o NORTE
-GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex_lab = 0.9, lab = "N", col = "black")
-```
-
-    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
-    ## not a graphical parameter
-
-``` r
+GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex.lab = 0.9, lab = "N", col = "black")
 # coloca um texto para avisar quem é Brasil e Guiana
 text(-58, -10, labels = "BRASIL", pos = 4, cex = cex_tam[1], font = 2)
 box()
@@ -277,13 +269,7 @@ text((sum(range(x_geral)) / 2) - 0.1, max(y_geral) - 0.02, labels = "Roraima", p
 par(cex = 1, las = 1)
 maps::map.scale(max(x_geral) - 0.15, min(y_geral) + 0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = "black")
 # coloca o Norte
-GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex_lab = 1.2, lwd = 1.5, col = "black")
-```
-
-    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
-    ## not a graphical parameter
-
-``` r
+GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex.lab = 1.2, lwd = 1.5, col = "black")
 # coloca eixos das coordenadas
 maps::map.axes()
 axis(side = 4, las = 1)
@@ -308,7 +294,7 @@ legend(
   y.intersp = 1.8)
 ```
 
-![](post_layout_revisitado_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Rodriguesetal_2017_Tutorial_DistributionMap_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## 05 Salva o mapa final em um pdf
 
@@ -338,13 +324,7 @@ rect(
 # coloca escala do mapa
 par(cex = 1, las = 1)
 # inclui o NORTE
-GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex_lab = 0.9, lab = "N", col = "black")
-```
-
-    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
-    ## not a graphical parameter
-
-``` r
+GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex.lab = 0.9, lab = "N", col = "black")
 # coloca um texto para avisar quem é Brasil e Guiana
 text(-58, -10, labels = "BRASIL", pos = 4, cex = cex_tam[1], font = 2)
 box()
@@ -384,13 +364,7 @@ text((sum(range(x_geral)) / 2) - 0.1, max(y_geral) - 0.02, labels = "Roraima", p
 par(cex = 1, las = 1)
 maps::map.scale(max(x_geral) - 0.15, min(y_geral) + 0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = "black")
 # coloca o Norte
-GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex_lab = 1.2, lwd = 1.5, col = "black")
-```
-
-    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
-    ## not a graphical parameter
-
-``` r
+GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex.lab = 1.2, lwd = 1.5, col = "black")
 # coloca eixos das coordenadas
 maps::map.axes()
 axis(side = 4, las = 1)
@@ -464,7 +438,7 @@ viagem.
   - [Multipanel plotting in R (with base
     graphics)](http://seananderson.ca/courses/11-multipanel/multipanel.pdf).
 
-##### *Para conferir o trabalho onde esse mapa foi publicado siga o link abaixo*:
+##### Para conferir o trabalho onde esse mapa foi publicado siga o link abaixo:
 
   - [Rodrigues et al. 2017. Novas ocorrências de angiospermas para o
     estado de Roraima, Brasil.
@@ -472,7 +446,7 @@ viagem.
     - Link no
     [*ResearchGate*](https://www.researchgate.net/publication/317671892_Novas_ocorrencias_de_angiospermas_para_o_estado_de_Roraima_Brasil).
 
-#### *Para ver outros mapas produzidos da mesma maneira*:
+#### Para ver outros mapas produzidos da mesma maneira:
 
   - [Lavor et al. 2016. Rediscovery of Pilosocereus oligolepsis
     (Cactaceae) in the State of Roraima, Brazil. Cactus and Succulent
