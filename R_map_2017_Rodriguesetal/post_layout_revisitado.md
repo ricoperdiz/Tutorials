@@ -1,27 +1,14 @@
-Composição de mapas em R
+Tutorial para plotar mapa publicado em [Rodrigues et
+al. (2017)](http://www.scielo.br/scielo.php?script=sci_arttext&pid=S2175-78602017000200783)
 ================
 Ricardo Perdiz  
 Instituto Nacional de Pesquisas da Amazônia  
-Programa de Pós-graduação em Botânica
-05 February 2019
+Programa de Pós-graduação em Botânica  
+Manaus, Amazonas, Brasil
+09 February 2019
 
-Esta postagem é uma reformulação de uma anterior, publicada em 2017,
-neste mesmo blog (veja-a
-[aqui](https://labotam.blogspot.com/2017/06/uso-da-funcao-layout-na-composicao-de.html)).
-Aqui ela é apresentada na forma de um [**R
-notebook**](https://youtu.be/GG4pgtfDpWY). Foram feitas algumas
-modificações a fim de torná-la totalmente reprodutível, isto é, você
-pode executar este arquivo do início ao fim que ele vai rodar, **desde
-que** você tenha os pacotes necessários instalados em seu computador.
-
------
-
-Os scripts abaixo reproduzem o mapa publicado recentemente em [Rodrigues
-*et al.*
-(2017)](http://rodriguesia.jbrj.gov.br/FASCICULOS/rodrig68-2/29-0140-2016.pdf)
-(caso você possua conta no ResearchGate, pode visualizar o trabalho
-neste
-[link](https://www.researchgate.net/publication/317671892_Novas_ocorrencias_de_angiospermas_para_o_estado_de_Roraima_Brasil)).
+O tutorial abaixo reproduz o mapa publicado em [Rodrigues *et al.*
+(2017)](https://www.researchgate.net/publication/317671892_Novas_ocorrencias_de_angiospermas_para_o_estado_de_Roraima_Brasil).
 O mapa principal apresenta localidades de coleta de espécimes de plantas
 em duas unidades de conservação do estado de Roraima. A maioria dessas
 coletas foram feitas durante a expedição [*Terra
@@ -30,9 +17,7 @@ dezembro de 2013, organizada pelas equipes gestoras do Parque Nacional
 Serra da Mocidade e Estação Ecológica de Niquiá, com financiamento da
 ARPA. Veja mais detalhes sobre a expedição ao fim desta postagem.
 
------
-
-### Carrega os pacotes
+## 01 Carrega os pacotes
 
 Para gerar o mapa desta postagem, fiz uso dos pacotes
     abaixo:
@@ -47,6 +32,7 @@ Para gerar o mapa desta postagem, fiz uso dos pacotes
 dependências instaladas.
 
 ``` r
+# Lista de pacotes necessarios para este tutorial
 library(broom)
 library(dplyr)
 ```
@@ -114,68 +100,69 @@ library(rgdal)
     ##  Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.5/Resources/library/rgdal/proj
     ##  Linking to sp version: 1.3-1
 
-### Importa os dados
+## 02 Importa os dados
 
 ``` r
-#dados dos pontos de coleta dos vouchers
-new.reg.voucher <- read.table('rodrigues_etal_2017_coordenadas_novos_registros.csv',header=T,as.is=T,sep='\t')
+## 02 Importa os dados
+# dados dos pontos de coleta dos vouchers
+new_reg_voucher <- read.table("rodrigues_etal_2017_coordenadas_novos_registros.csv", header = T, as.is = T, sep = "\t")
 
-#kml do PARNA S Mocidade e ESEC Niquia
-mocidade <- rgdal::readOGR(dsn='parna_serra_da_mocidade.kml',layer='sql_statement')
+# kml do PARNA S Mocidade e ESEC Niquia
+mocidade <- rgdal::readOGR(dsn = "parna_serra_da_mocidade.kml", layer = "sql_statement")
 ```
 
     ## OGR data source with driver: KML 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout/parna_serra_da_mocidade.kml", layer: "sql_statement"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal/parna_serra_da_mocidade.kml", layer: "sql_statement"
     ## with 1 features
     ## It has 2 fields
 
 ``` r
-niquia <- rgdal::readOGR(dsn='esec_niquia.kml',layer='sql_statement')
+niquia <- rgdal::readOGR(dsn = "esec_niquia.kml", layer = "sql_statement")
 ```
 
     ## OGR data source with driver: KML 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout/esec_niquia.kml", layer: "sql_statement"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal/esec_niquia.kml", layer: "sql_statement"
     ## with 1 features
     ## It has 2 fields
 
 ``` r
-#shape da Am Sul e Central
-area.mapa <- rgdal::readOGR(dsn = 'SAm_CAm_shape.shp')
+# shape da Am Sul e Central
+area_mapa <- rgdal::readOGR(dsn = "SAm_CAm_shape.shp")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout/SAm_CAm_shape.shp", layer: "SAm_CAm_shape"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal/SAm_CAm_shape.shp", layer: "SAm_CAm_shape"
     ## with 37 features
     ## It has 65 fields
 
 ``` r
-#shape de RR
-rr <- rgdal::readOGR(dsn = 'roraima.shp')
+# shape de RR
+rr <- rgdal::readOGR(dsn = "roraima.shp")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout/roraima.shp", layer: "roraima"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal/roraima.shp", layer: "roraima"
     ## with 1 features
     ## It has 8 fields
     ## Integer64 fields read as strings:  MSLINK MAPID
 
 ``` r
-#shape de rios em RR
-rios.main <- rgdal::readOGR(getwd(),'rios',encoding='latin1')
+# shape de rios em RR
+rios_main <- rgdal::readOGR(getwd(), "rios", encoding = "latin1")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout", layer: "rios"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal", layer: "rios"
     ## with 1849 features
     ## It has 16 fields
     ## Integer64 fields read as strings:  FNODE_ TNODE_ LPOLY_ RPOLY_ RIV3M_W_ RIV3M_W_ID
 
 ``` r
-rios.sec <- rgdal::readOGR(getwd(),'rios2',encoding='latin1')
+rios_sec <- rgdal::readOGR(getwd(), "rios2", encoding = "latin1")
 ```
 
     ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_with_layout", layer: "rios2"
+    ## Source: "/Users/ricoperdiz/Documents/Tutorials/R_map_2017_Rodriguesetal", layer: "rios2"
     ## with 1624 features
     ## It has 1 fields
     ## Integer64 fields read as strings:  FID
@@ -185,21 +172,23 @@ rios.sec <- rgdal::readOGR(getwd(),'rios2',encoding='latin1')
     ## 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
     ## 37, 38, 39, 40, 41, 42, 43, 44
 
-### Cria variáveis para os plots
+## 03 Cria variáveis para os plots
 
 ``` r
+## 03 Cria variaveis para os plots
+
 # para o mapa de referencia
-#amplitude de long
-x1 <- c(-70,-50)
-y1 <- c(-10,5)
+# amplitude de long
+x1 <- c(-70, -50)
+y1 <- c(-10, 5)
 
-#vetor de tamanho para o cex
-cex.tam <- seq(0.8,1.6,by=0.1)
+# vetor de tamanho para o cex
+cex_tam <- seq(0.8, 1.6, by = 0.1)
 
-#vetor com tipos de pontos
+# vetor com tipos de pontos
 pontos <- c(17:25)
 
-#amplitude de lat e long - vetores
+# amplitude de lat e long - vetores
 lat_long <- dplyr::full_join(tidy(mocidade), tidy(niquia))
 ```
 
@@ -209,172 +198,214 @@ lat_long <- dplyr::full_join(tidy(mocidade), tidy(niquia))
     ## Joining, by = c("long", "lat", "order", "hole", "piece", "group", "id")
 
 ``` r
-y.geral <- range(lat_long$lat) + c(-0.01,0.01)
-x.geral <- range(lat_long$long) + c(-0.01,0.01)
+y_geral <- range(lat_long$lat) + c(-0.01, 0.01)
+x_geral <- range(lat_long$long) + c(-0.01, 0.01)
 ```
 
-### Compõe um gráfico para acomodar os diferentes plots e plota cada mapa
+## 04 Compõe um gráfico para acomodar os diferentes plots e plota cada mapa individualmente
 
 À primeira vista, repare que a figura, por ser composta de três plots
 individuais, pode não parecer bem ajustada devido aos dispositivos de
-visualização
+visualização.
 
 ``` r
-#layout do mapa
-mapa.layout <- graphics::layout(
-    mat = matrix(c(1,1,2,2,2,2,2,2,3,3,2,2,2,2,2,2,3,3,2,2,2,2,2,2),nrow=3,byrow=T),
-    widths=rep(2/8,8),
-    heights=rep(1/3,3),
-    respect=T)
+## 04 Compoe um grafico para acomodar os diferentes plots e plota cada mapa
+
+# layout do mapa
+mapa_layout <- graphics::layout(
+  mat = matrix(c(1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 2, 2), nrow = 3, byrow = T),
+  widths = rep(2 / 8, 8),
+  heights = rep(1 / 3, 3),
+  respect = T
+)
 # plot 1
-par(mar=c(0,2,2,2))
-plot(area.mapa,xlim=x1,ylim=y1,lwd=0.2)
-plot(rr,add=T,col='gray90')
-#plota um retangulo na area do mapa da direita
-rect(xleft = min(x.geral), ybottom = min(y.geral), xright = 
-         max(x.geral), ytop = max(y.geral), density = 25)
-#coloca escala do mapa
-par(cex=1, las=1)
-#library(GISTools)
+par(mar = c(0, 2, 2, 2))
+plot(area_mapa, xlim = x1, ylim = y1, lwd = 0.2)
+plot(rr, add = TRUE, col = "gray90")
+# plota um retangulo na area do mapa da direita
+rect(
+  xleft = min(x_geral), ybottom = min(y_geral), xright =
+    max(x_geral), ytop = max(y_geral), density = 25
+)
+# coloca escala do mapa
+par(cex = 1, las = 1)
+# library(GISTools)
 # inclui o NORTE
-GISTools::north.arrow(max(x1)-5,max(y1)-10,len=1,cex.lab=0.9,lab='N', col = 'black')
-#coloca um texto para avisar quem é Brasil e Guiana
-text(-58,-10,labels='BRASIL',pos=4,cex=cex.tam[1],font=2)
-box()
-# plot 2
-par(mar=c(2,2,2,3))
-#plota o mapa das uc`s com dados específicos
-plot(rr,col='gray90',xlim=x.geral,ylim=y.geral,lwd=1,lty=1) #default lwd=1,lty=1
-
-plot(mocidade,add=T,lty=0,col='gray80')
-plot(niquia,add=T,lty=0,col='gray80')
-
-#plota os rios
-plot(rios.main,add=T,col='gray60')
-plot(rios.sec,add=T,col='gray60')
-
-#plota as areas dos mapas
-plot(mocidade,add=T,lwd=1.4,lty=2)
-plot(niquia,add=T,lwd=1.4,lty=3)
-
-#plota os pontos de coleta
-points(new.reg.voucher$long,new.reg.voucher$lat,pch=pontos[3],col='black',cex=1.4)
-
-#coloca nome dos rios
-text(x=-61.42,y=0.8,labels='Rio Branco',pos=1,srt=60,font=3)
-text(x=-61.65,y=1.3,labels='Rio Água Boa do Univini',pos=1,srt=70,font=3)
-text(x=-61.97,y=0.77,labels='Rio Catrimani',pos=3,srt=-50,font=3)
-text(x=-61.9,y=1.2,labels='Rio Capivara',pos=3,srt=-60,font=3)
-#coloca nome das UC's
-text(x=-61.80,y=1.5,labels='PARNA\nS. Mocidade',pos=1,font=2)
-text(x=-61.50,y=1.3,labels='ESEC\nNiquiá',pos=1,font=2)
-
-# coloca um texto para informar área do Amazonas e Roraima
-text(-62.845,sum(range(y.geral))/2,labels='Amazonas',pos=4,cex=1.4,font=2)
-text((sum(range(x.geral))/2)-0.1,max(y.geral)-0.02,labels='Roraima',pos=4,cex=1.4,font=2)
-
-#coloca escala do mapa
-par(cex=1, las=1)
-maps::map.scale(max(x.geral) - 0.15, min(y.geral)+0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = 'black')
-#coloca o Norte
-GISTools::north.arrow(max(x.geral),min(y.geral)+0.07,len=0.02,lab='N',cex.lab=1.2,lwd=1.5,col='black')
-#coloca eixos das coordenadas
-maps::map.axes()
-axis(side=4,las=1)
-axis(side=3,las=1)
-
-# plot 3 - LEGENDA
-par(mar = c(1,1,0,1))
-plot.new()
-par(cex = 1.2)
-legend(x = 'center', ncol = 1, legend = 
-           c('Pontos de coleta dos\nvouchers','Parque Nacional Serra da\nMocidade','Estação Ecológica de\nNiquiá','Fronteira entre estados','Cursos de água'),
-       pch = c(pontos[3], NA, NA, NA, NA), col = c('black','black','black','black','gray60'), title = 'LEGENDA',
-       cex = cex.tam[3], lty = c(0,2,3,1,1), pt.lwd = 2, text.width = 0.8, lwd = 3, y.intersp = 1.8)
+GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex_lab = 0.9, lab = "N", col = "black")
 ```
 
-![](post_layout_revisitado_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-
-### Caso queira gerar um pdf com a figura acima…
-
-Execute o código abaixo e terás, então, um pdf com a imagem acima. A
-mágica ocorre devido à função `pdf()`, inserida antes da execução da
-função
-`layout`.
+    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
+    ## not a graphical parameter
 
 ``` r
-pdf(paste('rodriguesetal2017_mapa_final.pdf',sep=''),height=7,width=14,onefile=T)
-#layout do mapa
-mapa.layout <- graphics::layout(
-    mat = matrix(c(1,1,2,2,2,2,2,2,3,3,2,2,2,2,2,2,3,3,2,2,2,2,2,2),nrow=3,byrow=T),
-    widths=rep(2/8,8),
-    heights=rep(1/3,3),
-    respect=T)
-# plot 1
-par(mar=c(0,2,2,2))
-plot(area.mapa,xlim=x1,ylim=y1,lwd=0.2)
-plot(rr,add=T,col='gray90')
-#plota um retangulo na area do mapa da direita
-rect(xleft = min(x.geral), ybottom = min(y.geral), xright = 
-         max(x.geral), ytop = max(y.geral), density = 25)
-#coloca escala do mapa
-par(cex=1, las=1)
-#library(GISTools)
-# inclui o NORTE
-GISTools::north.arrow(max(x1)-5,max(y1)-10,len=1,cex.lab=0.9,lab='N', col = 'black')
-#coloca um texto para avisar quem é Brasil e Guiana
-text(-58,-10,labels='BRASIL',pos=4,cex=cex.tam[1],font=2)
+# coloca um texto para avisar quem é Brasil e Guiana
+text(-58, -10, labels = "BRASIL", pos = 4, cex = cex_tam[1], font = 2)
 box()
 # plot 2
-par(mar=c(2,2,2,3))
-#plota o mapa das uc`s com dados específicos
-plot(rr,col='gray90',xlim=x.geral,ylim=y.geral,lwd=1,lty=1) #default lwd=1,lty=1
+par(mar = c(2, 2, 2, 3))
+# plota o mapa das uc`s com dados específicos
+plot(rr, col = "gray90", xlim = x_geral, ylim = y_geral, lwd = 1, lty = 1) # default lwd=1,lty=1
 
-plot(mocidade,add=T,lty=0,col='gray80')
-plot(niquia,add=T,lty=0,col='gray80')
+plot(mocidade, add = TRUE, lty = 0, col = "gray80")
+plot(niquia, add = TRUE, lty = 0, col = "gray80")
 
-#plota os rios
-plot(rios.main,add=T,col='gray60')
-plot(rios.sec,add=T,col='gray60')
+# plota os rios
+plot(rios_main, add = TRUE, col = "gray60")
+plot(rios_sec, add = TRUE, col = "gray60")
 
-#plota as areas dos mapas
-plot(mocidade,add=T,lwd=1.4,lty=2)
-plot(niquia,add=T,lwd=1.4,lty=3)
+# plota as areas dos mapas
+plot(mocidade, add = TRUE, lwd = 1.4, lty = 2)
+plot(niquia, add = TRUE, lwd = 1.4, lty = 3)
 
-#plota os pontos de coleta
-points(new.reg.voucher$long,new.reg.voucher$lat,pch=pontos[3],col='black',cex=1.4)
+# plota os pontos de coleta
+points(new_reg_voucher$long, new_reg_voucher$lat, pch = pontos[3], col = "black", cex = 1.4)
 
-#coloca nome dos rios
-text(x=-61.42,y=0.8,labels='Rio Branco',pos=1,srt=60,font=3)
-text(x=-61.65,y=1.3,labels='Rio Água Boa do Univini',pos=1,srt=70,font=3)
-text(x=-61.97,y=0.77,labels='Rio Catrimani',pos=3,srt=-50,font=3)
-text(x=-61.9,y=1.2,labels='Rio Capivara',pos=3,srt=-60,font=3)
-#coloca nome das UC's
-text(x=-61.80,y=1.5,labels='PARNA\nS. Mocidade',pos=1,font=2)
-text(x=-61.50,y=1.3,labels='ESEC\nNiquiá',pos=1,font=2)
+# coloca nome dos rios
+text(x = -61.42, y = 0.8, labels = "Rio Branco", pos = 1, srt = 60, font = 3)
+text(x = -61.65, y = 1.3, labels = "Rio Água Boa do Univini", pos = 1, srt = 70, font = 3)
+text(x = -61.97, y = 0.77, labels = "Rio Catrimani", pos = 3, srt = -50, font = 3)
+text(x = -61.9, y = 1.2, labels = "Rio Capivara", pos = 3, srt = -60, font = 3)
+# coloca nome das UC's
+text(x = -61.80, y = 1.5, labels = "PARNA\nS. Mocidade", pos = 1, font = 2)
+text(x = -61.50, y = 1.3, labels = "ESEC\nNiquiá", pos = 1, font = 2)
 
 # coloca um texto para informar área do Amazonas e Roraima
-text(-62.845,sum(range(y.geral))/2,labels='Amazonas',pos=4,cex=1.4,font=2)
-text((sum(range(x.geral))/2)-0.1,max(y.geral)-0.02,labels='Roraima',pos=4,cex=1.4,font=2)
+text(-62.845, sum(range(y_geral)) / 2, labels = "Amazonas", pos = 4, cex = 1.4, font = 2)
+text((sum(range(x_geral)) / 2) - 0.1, max(y_geral) - 0.02, labels = "Roraima", pos = 4, cex = 1.4, font = 2)
 
-#coloca escala do mapa
-par(cex=1, las=1)
-maps::map.scale(max(x.geral) - 0.15, min(y.geral)+0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = 'black')
-#coloca o Norte
-GISTools::north.arrow(max(x.geral),min(y.geral)+0.07,len=0.02,lab='N',cex.lab=1.2,lwd=1.5,col='black')
-#coloca eixos das coordenadas
+# coloca escala do mapa
+par(cex = 1, las = 1)
+maps::map.scale(max(x_geral) - 0.15, min(y_geral) + 0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = "black")
+# coloca o Norte
+GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex_lab = 1.2, lwd = 1.5, col = "black")
+```
+
+    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
+    ## not a graphical parameter
+
+``` r
+# coloca eixos das coordenadas
 maps::map.axes()
-axis(side=4,las=1)
-axis(side=3,las=1)
+axis(side = 4, las = 1)
+axis(side = 3, las = 1)
 
 # plot 3 - LEGENDA
-par(mar = c(1,1,0,1))
+par(mar = c(1, 1, 0, 1))
 plot.new()
 par(cex = 1.2)
-legend(x = 'center', ncol = 1, legend = 
-           c('Pontos de coleta dos\nvouchers','Parque Nacional Serra da\nMocidade','Estação Ecológica de\nNiquiá','Fronteira entre estados','Cursos de água'),
-       pch = c(pontos[3], NA, NA, NA, NA), col = c('black','black','black','black','gray60'), title = 'LEGENDA',
-       cex = cex.tam[3], lty = c(0,2,3,1,1), pt.lwd = 2, text.width = 0.8, lwd = 3, y.intersp = 1.8)
+legend(
+  x = "center",
+  ncol = 1,
+  legend = c("Pontos de coleta dos\nvouchers", "Parque Nacional Serra da\nMocidade", "Estação Ecológica de\nNiquiá", "Fronteira entre estados", "Cursos de água"),
+  pch = c(pontos[3], NA, NA, NA, NA),
+  col = c("black", "black", "black", "black", "gray60"),
+  title = "LEGENDA",
+  cex = cex_tam[3],
+  lty = c(0, 2, 3, 1, 1),
+  pt.lwd = 2,
+  text.width = 0.8,
+  lwd = 3,
+  y.intersp = 1.8)
+```
+
+![](post_layout_revisitado_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+## 05 Salva o mapa final em um pdf
+
+Execute o código abaixo e terás, então, um pdf com a imagem acima. A
+mágica ocorre devido à função `pdf`, inserida antes da execução da
+função `layout`.
+
+``` r
+## 05 Salva o mapa final em um pdf
+pdf(paste("rodriguesetal2017_mapa_final.pdf", sep = ""), height = 7, width = 14, onefile = T)
+# layout do mapa
+mapa_layout <- graphics::layout(
+  mat = matrix(c(1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 2, 2), nrow = 3, byrow = T),
+  widths = rep(2 / 8, 8),
+  heights = rep(1 / 3, 3),
+  respect = T
+)
+# plot 1
+par(mar = c(0, 2, 2, 2))
+plot(area_mapa, xlim = x1, ylim = y1, lwd = 0.2)
+plot(rr, add = T, col = "gray90")
+# plota um retangulo na area do mapa da direita
+rect(
+  xleft = min(x_geral), ybottom = min(y_geral), xright =
+    max(x_geral), ytop = max(y_geral), density = 25
+)
+# coloca escala do mapa
+par(cex = 1, las = 1)
+# inclui o NORTE
+GISTools::north.arrow(max(x1) - 5, max(y1) - 10, len = 1, cex_lab = 0.9, lab = "N", col = "black")
+```
+
+    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
+    ## not a graphical parameter
+
+``` r
+# coloca um texto para avisar quem é Brasil e Guiana
+text(-58, -10, labels = "BRASIL", pos = 4, cex = cex_tam[1], font = 2)
+box()
+# plot 2
+par(mar = c(2, 2, 2, 3))
+# plota o mapa das uc`s com dados específicos
+plot(rr, col = "gray90", xlim = x_geral, ylim = y_geral, lwd = 1, lty = 1)
+
+plot(mocidade, add = T, lty = 0, col = "gray80")
+plot(niquia, add = T, lty = 0, col = "gray80")
+
+# plota os rios
+plot(rios_main, add = T, col = "gray60")
+plot(rios_sec, add = T, col = "gray60")
+
+# plota as areas dos mapas
+plot(mocidade, add = T, lwd = 1.4, lty = 2)
+plot(niquia, add = T, lwd = 1.4, lty = 3)
+
+# plota os pontos de coleta
+points(new_reg_voucher$long, new_reg_voucher$lat, pch = pontos[3], col = "black", cex = 1.4)
+
+# coloca nome dos rios
+text(x = -61.42, y = 0.8, labels = "Rio Branco", pos = 1, srt = 60, font = 3)
+text(x = -61.65, y = 1.3, labels = "Rio Água Boa do Univini", pos = 1, srt = 70, font = 3)
+text(x = -61.97, y = 0.77, labels = "Rio Catrimani", pos = 3, srt = -50, font = 3)
+text(x = -61.9, y = 1.2, labels = "Rio Capivara", pos = 3, srt = -60, font = 3)
+# coloca nome das UC's
+text(x = -61.80, y = 1.5, labels = "PARNA\nS. Mocidade", pos = 1, font = 2)
+text(x = -61.50, y = 1.3, labels = "ESEC\nNiquiá", pos = 1, font = 2)
+
+# coloca um texto para informar área do Amazonas e Roraima
+text(-62.845, sum(range(y_geral)) / 2, labels = "Amazonas", pos = 4, cex = 1.4, font = 2)
+text((sum(range(x_geral)) / 2) - 0.1, max(y_geral) - 0.02, labels = "Roraima", pos = 4, cex = 1.4, font = 2)
+
+# coloca escala do mapa
+par(cex = 1, las = 1)
+maps::map.scale(max(x_geral) - 0.15, min(y_geral) + 0.02, relwidth = 0.10, ratio = F, cex = 1, metric = T, col = "black")
+# coloca o Norte
+GISTools::north.arrow(max(x_geral), min(y_geral) + 0.07, len = 0.02, lab = "N", cex_lab = 1.2, lwd = 1.5, col = "black")
+```
+
+    ## Warning in polygon(xb + arrow.x * s, yb + arrow.y * s, ...): "cex_lab" is
+    ## not a graphical parameter
+
+``` r
+# coloca eixos das coordenadas
+maps::map.axes()
+axis(side = 4, las = 1)
+axis(side = 3, las = 1)
+
+# plot 3 - LEGENDA
+par(mar = c(1, 1, 0, 1))
+plot.new()
+par(cex = 1.2)
+legend(
+  x = "center", ncol = 1, legend =
+    c("Pontos de coleta dos\nvouchers", "Parque Nacional Serra da\nMocidade", "Estação Ecológica de\nNiquiá", "Fronteira entre estados", "Cursos de água"),
+  pch = c(pontos[3], NA, NA, NA, NA), col = c("black", "black", "black", "black", "gray60"), title = "LEGENDA",
+  cex = cex_tam[3], lty = c(0, 2, 3, 1, 1), pt.lwd = 2, text.width = 0.8, lwd = 3, y.intersp = 1.8
+)
 dev.off()
 ```
 

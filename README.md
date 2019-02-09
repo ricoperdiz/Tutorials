@@ -11,7 +11,11 @@ Tutoriais disponíveis:
   - Plotar mapa de [**A new species of *Macrolobium* (Fabaceae,
     Detarioideae) endemic on a Tepui of the Guyana Shield in Brazil**
     (Farronay et
-    al. 2018)](A%20new%20species%20of%20Macrolobium%20\(Fabaceae,%20Detarioideae\)%20endemic%20on%20a%20Tepui%20of%20the%20Guyana%20Shield%20in%20Brazil)
+    al. 2018)](https://www.researchgate.net/publication/326475093_A_new_species_of_Macrolobium_Fabaceae_Detarioideae_endemic_on_a_Tepui_of_the_Guyana_Shield_in_Brazil)
+
+  - Plotar mapa de [**Novas ocorrências de angiospermas para o estado de
+    Roraima, Brasil** (Rodrigues et
+    al. 2017](https://www.researchgate.net/publication/317671892_Novas_ocorrencias_de_angiospermas_para_o_estado_de_Roraima_Brasil).
 
   - Plotar mapa de [**Rediscovery of *Pilosocereus oligolepsis*
     (Cactaceae) in the State of Roraima, Brazil** (Lavor et
